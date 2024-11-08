@@ -1,0 +1,102 @@
+openapi: 3.0.1
+info:
+  version: 1.0.0
+  title: Logs API
+  description: API for managing logs and checking service health
+tags:
+  - name: Logs
+    description: Operations related to logs management and health checks
+paths:
+  /logs/health:
+    get:
+      tags:
+        - Logs
+      summary: Check service health
+      responses:
+        '200':
+          description: Health information retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthInfo'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Error: Failed to format JSON"
+  /logs/health/live:
+    get:
+      tags:
+        - Logs
+      summary: Check live status of the service
+      responses:
+        '200':
+          description: Live status retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LiveStatus'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Error: Failed to format JSON"
+  /logs/health/ready:
+    get:
+      tags:
+        - Logs
+      summary: Check readiness of the service
+      responses:
+        '200':
+          description: Readiness status retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReadyStatus'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Error: Failed to format JSON"
+components:
+  schemas:
+    HealthInfo:
+      type: object
+      properties:
+        live:
+          type: string
+          description: Live status of the service
+          example: "Service is running"
+        ready:
+          type: string
+          description: Readiness status of the service
+          example: "Service is ready to handle requests"
+    LiveStatus:
+      type: object
+      properties:
+        live:
+          type: string
+          description: Live status of the service
+          example: "Service is running"
+    ReadyStatus:
+      type: object
+      properties:
+        ready:
+          type: string
+          description: Readiness status of the service
+          example: "Service is ready to handle requests"

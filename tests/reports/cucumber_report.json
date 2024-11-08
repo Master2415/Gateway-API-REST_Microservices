@@ -1,0 +1,111 @@
+[
+  {
+    "description": "",
+    "elements": [
+      {
+        "description": "",
+        "id": "crear-perfil;agregar-perfil-exitosamente",
+        "keyword": "Scenario",
+        "line": 8,
+        "name": "Agregar perfil exitosamente",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 785300
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 4,
+            "name": "un usuario quiere agregar un perfil",
+            "match": {
+              "location": "features\\step_definitions\\profile_addProfile.js:51"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2692100
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 5,
+            "name": "se proporcionan los datos del perfil",
+            "match": {
+              "location": "features\\step_definitions\\profile_addProfile.js:56"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 234300
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 6,
+            "name": "se envía una solicitud POST a /api/add_profile",
+            "match": {
+              "location": "features\\step_definitions\\profile_addProfile.js:61"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 155399
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 9,
+            "name": "se envía una solicitud POST con datos de perfil válidos",
+            "match": {
+              "location": "features\\step_definitions\\profile_addProfile.js:66"
+            },
+            "result": {
+              "status": "failed",
+              "duration": 121836000,
+              "error_message": "Error: No se recibió una respuesta válida o el mensaje de error está vacío.\n    at World.<anonymous> (C:\\Users\\Usuario\\Desktop\\microservices\\tests\\features\\step_definitions\\profile_addProfile.js:77:19)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 10,
+            "name": "se espera que el código de respuesta de /api/add_profile sea 200",
+            "match": {
+              "location": "features\\step_definitions\\profile_addProfile.js:82"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 11,
+            "name": "se espera que el mensaje de respuesta de /api/add_profile sea \"Perfil creado exitosamente\"",
+            "match": {
+              "location": "features\\step_definitions\\profile_addProfile.js:87"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      }
+    ],
+    "id": "crear-perfil",
+    "line": 1,
+    "keyword": "Feature",
+    "name": "Crear Perfil",
+    "tags": [],
+    "uri": "features\\profile_addProfile.feature"
+  }
+]

@@ -1,0 +1,229 @@
+openapi: 3.0.1
+info:
+  version: 1.0.0
+  title: Profiles API
+  description: API for managing user profiles and performing health checks
+tags:
+  - name: Profiles
+    description: Operations related to user profiles management and health checks
+paths:
+  /profile/add:
+    post:
+      tags:
+        - Profiles
+      summary: Add a new profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProfileInput'
+      responses:
+        '200':
+          description: Profile added successfully
+        '400':
+          description: Error occurred while adding the profile
+  /profile/update:
+    put:
+      tags:
+        - Profiles
+      summary: Update an existing profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProfileInput'
+      responses:
+        '200':
+          description: Profile updated successfully
+        '400':
+          description: Error occurred while updating the profile
+  /profile/delete/{email}:
+    delete:
+      tags:
+        - Profiles
+      summary: Delete a profile by email
+      parameters:
+        - in: path
+          name: email
+          required: true
+          schema:
+            type: string
+            format: email
+      responses:
+        '200':
+          description: Profile deleted successfully
+        '400':
+          description: Error occurred while deleting the profile
+  /profile/search/{email}:
+    get:
+      tags:
+        - Profiles
+      summary: Get a profile by email
+      parameters:
+        - in: path
+          name: email
+          required: true
+          schema:
+            type: string
+            format: email
+      responses:
+        '200':
+          description: Profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+        '404':
+          description: Profile not found
+  /profile/getall:
+    get:
+      tags:
+        - Profiles
+      summary: Get all profiles
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+          description: Page number
+        - in: query
+          name: pagesize
+          schema:
+            type: integer
+            minimum: 1
+            default: 10
+          description: Number of profiles per page
+      responses:
+        '200':
+          description: Profiles retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Profile'
+        '404':
+          description: No profiles found
+  /profile/health:
+    get:
+      tags:
+        - Profiles
+      summary: Check service health
+      responses:
+        '200':
+          description: Health information retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthInfo'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Error: Failed to format JSON"
+components:
+  schemas:
+    ProfileInput:
+      type: object
+      required:
+        - name
+        - url
+        - nickname
+        - public_info
+        - messaging
+        - biography
+        - organization
+        - country
+        - social_media
+        - email
+      properties:
+        name:
+          type: string
+          description: Name of the profile
+        url:
+          type: string
+          format: uri
+          description: URL of the profile
+        nickname:
+          type: string
+          description: Nickname of the profile
+        public_info:
+          type: string
+          description: Public information of the profile
+        messaging:
+          type: string
+          description: Messaging of the profile
+        biography:
+          type: string
+          description: Biography of the profile
+        organization:
+          type: string
+          description: Organization of the profile
+        country:
+          type: string
+          description: Country of the profile
+        social_media:
+          type: string
+          description: Social media of the profile
+        email:
+          type: string
+          format: email
+          description: Email of the profile
+    Profile:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the profile
+        url:
+          type: string
+          format: uri
+          description: URL of the profile
+        nickname:
+          type: string
+          description: Nickname of the profile
+        public_info:
+          type: string
+          description: Public information of the profile
+        messaging:
+          type: string
+          description: Messaging of the profile
+        biography:
+          type: string
+          description: Biography of the profile
+        organization:
+          type: string
+          description: Organization of the profile
+        country:
+          type: string
+          description: Country of the profile
+        social_media:
+          type: string
+          description: Social media of the profile
+        email:
+          type: string
+          format: email
+          description: Email of the profile
+    HealthInfo:
+      type: object
+      properties:
+        live:
+          type: string
+          description: Live status of the service
+          example: "Service is running"
+        ready:
+          type: string
+          description: Readiness status of the service
+          example: "Service is ready to handle requests"
+      example:
+        live: "Service is running"
+        ready: "Service is ready to handle requests"

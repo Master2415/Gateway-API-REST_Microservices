@@ -1,0 +1,285 @@
+openapi: 3.0.1
+info:
+  title: User API
+  description: This API is responsible for managing users and the performance of the API itself.
+  version: 1.0.0
+tags:
+  - name: Users
+    description: Operations related to user authentication
+  - name: Health
+    description: Operations related to API health
+  - name: Login
+    description: Operations related to user authentication
+paths:
+  /user/login:
+    post:
+      tags:
+        - Login
+      summary: User Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: Successful authentication, returns a JWT token
+          content:
+            text/plain:
+              schema:
+                type: string
+                
+        '400':
+          description: Authentication error, error details provided in response body.
+        '404':
+          description: User not found in the database.
+        '405':
+          description: Method not allowed. Only POST method is allowed.
+  /user/users:
+    get:
+      tags:
+        - Users
+      summary: List Users
+      description: Returns a list of users with pagination support.
+      parameters:
+        - $ref: '#/components/parameters/token'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/pageSize'
+      responses:
+        '200':
+          description: List of users and total count.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Clients:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string
+                        email:
+                          type: string
+                  Records:
+                    type: integer
+        '401':
+          description: Invalid token.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+    post:
+      tags:
+        - Users
+      summary: Create a new user
+      description: Creates a new user by providing email, username, and password.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: User created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Missing required fields or error creating the user.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+    delete:
+      tags:
+        - Users
+      summary: Delete user
+      description: Deletes a user based on the provided email.
+      parameters:
+        - $ref: '#/components/parameters/token'
+        - $ref: '#/components/parameters/email'
+      responses:
+        '200':
+          description: Operation successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '401':
+          description: Invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+    put:
+      tags:
+        - Users
+      summary: Update user
+      description: Updates a user's data based on the provided old email.
+      parameters:
+        - $ref: '#/components/parameters/token'
+        - $ref: '#/components/parameters/email'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: User updated successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '401':
+          description: Invalid token.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        '404':
+          description: User not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+  /user/health:
+    get:
+      tags:
+        - Health
+      summary: Check health status
+      description: Checks both live and ready state of the application.
+      responses:
+        '200':
+          description: Health states verified successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  live:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        status:
+                          type: string
+                          enum: [pass, fail]
+                        description:
+                          type: string
+                  ready:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        status:
+                          type: string
+                          enum: [pass, fail]
+                        description:
+                          type: string
+  /user/health/ready:
+    get:
+      tags:
+        - Health
+      summary: Check ready state
+      description: Checks if the application is ready to handle requests.
+      responses:
+        '200':
+          description: Ready state verified successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  checks:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        status:
+                          type: string
+                          enum: [pass, fail]
+                        description:
+                          type: string
+  /user/health/live:
+    get:
+      tags:
+        - Health
+      summary: Check live state
+      description: Checks the live state of the application.
+      responses:
+        '200':
+          description: Live state verified successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  checks:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        status:
+                          type: string
+                          enum: [pass, fail]
+                        description:
+                          type: string
+  /user/users/{email}:
+    get:
+      tags:
+        - Users
+      summary: Get user by email
+      description: Allows getting information of a specific user by their email address.
+      parameters:
+        - $ref: '#/components/parameters/email'
+      responses:
+        '200':
+          description: User found
+         

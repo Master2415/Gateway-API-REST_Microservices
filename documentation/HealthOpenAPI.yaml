@@ -1,0 +1,119 @@
+openapi: 3.0.1
+info:
+  version: 1.0.0
+  title: Health API
+  description: API for registering and monitoring microservices' health
+tags:
+  - name: Health
+    description: Operations related to microservices health registration and monitoring
+paths:
+  /health/add:
+    post:
+      tags:
+        - Health
+      summary: Register a new microservice
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MicroserviceRegistrationRequest'
+      responses:
+        '200':
+          description: Microservice registered successfully
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "OK: Service was registered successfully"
+        '400':
+          description: Error registering microservice
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Error: Unexpected error: Invalid frequency value"
+  /health/all:
+    get:
+      tags:
+        - Health
+      summary: Get health status of all registered microservices
+      responses:
+        '200':
+          description: Health status of all microservices retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MicroserviceHealth'
+        '400':
+          description: Error retrieving health status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected error: Failed to connect to database"
+  /health/{microservice}:
+    get:
+      tags:
+        - Health
+      summary: Get health status of a specific microservice
+      parameters:
+        - $ref: '#/components/parameters/Microservice'
+      responses:
+        '200':
+          description: Health status of the microservice retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MicroserviceHealth'
+        '400':
+          description: Error retrieving health status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected error: Service 'payment' not found"
+components:
+  parameters:
+    Microservice:
+      name: microservice
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Name of the microservice
+  schemas:
+    MicroserviceRegistrationRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the microservice
+        endpoint:
+          type: string
+          description: Endpoint of the microservice
+        frequency:
+          type: integer
+          description: Frequency of health checks (in milliseconds)
+        email:
+          type: string
+          description: Email associated with the microservice
+    MicroserviceHealth:
+      type: object
+      properties:
+        serviceName:
+          type: string
+          description: Name of the microservice
+        response:
+          type: object
+          description: Response from the microservice
+          nullable: true
+          example: {"status": "running", "version": "1.0"}
